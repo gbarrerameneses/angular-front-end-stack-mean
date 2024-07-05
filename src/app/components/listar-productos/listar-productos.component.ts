@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductoService } from 'src/app/services/producto.service';
 
 @Component({
   selector: 'app-listar-productos',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListarProductosComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _productoService: ProductoService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { // ciclo de vida
+    this.obtenerProductos() // cuando se inicializa el ciclo de vida mandamos a llamar al método
+  }
+
+  obtenerProductos(){
+    this._productoService.getProductos().subscribe(data => { // al devolver un observable nos tenemos que suscribir
+      console.log(data);
+    }, error => {
+      console.log(error);
+    })
   }
 
 }
