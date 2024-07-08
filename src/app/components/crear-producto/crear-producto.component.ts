@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Producto } from 'src/app/models/producto';
 import { ToastrService } from 'ngx-toastr';
+import { ProductoService } from 'src/app/services/producto.service';
 
 @Component({
   selector: 'app-crear-producto',
@@ -16,7 +17,8 @@ export class CrearProductoComponent implements OnInit {
   constructor(
     private fb: FormBuilder, // utilizamos la clase FormBuilder que permite manejar de una buena manera los formularios
     private router: Router, // redireccionar al usuraio a oro componente
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private _productoService: ProductoService
   ) {
     this.productoForm = this.fb.group({ // pasamos el objeto de los elementos que tenemos en el formulario como parámetro
       producto: ['', Validators.required],
@@ -38,7 +40,12 @@ export class CrearProductoComponent implements OnInit {
       precio: this.productoForm.get('precio')?.value,
     }
     console.log('producto -->',PRODUCTO);
-    this.toastr.success('¡El producto fue registrado con éxito!', 'Producto registrado...');
-    this.router.navigate(['/']) // navegamos a la ruta raíz
+    this._productoService.saveProduct(PRODUCTO).subscribe(data => {
+      this.toastr.success('¡El producto fue registrado con éxito!', 'Producto registrado...');
+      this.router.navigate(['/']) // navegamos a la ruta raíz
+    }, error => {
+      console.log(error);
+      this.productoForm.reset(); // reseteamos el formulario
+    })
   }
 }
