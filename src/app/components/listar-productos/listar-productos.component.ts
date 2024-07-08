@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Producto } from 'src/app/models/producto';
 import { ProductoService } from 'src/app/services/producto.service';
 
@@ -10,7 +11,10 @@ import { ProductoService } from 'src/app/services/producto.service';
 export class ListarProductosComponent implements OnInit {
   listProducto: Producto[] = [];
 
-  constructor(private _productoService: ProductoService) { }
+  constructor(
+    private _productoService: ProductoService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void { // ciclo de vida
     this.obtenerProductos() // cuando se inicializa el ciclo de vida mandamos a llamar al método
@@ -25,4 +29,12 @@ export class ListarProductosComponent implements OnInit {
     })
   }
 
+  eliminarProducto(id: any) { // pasamos el id de tipo any
+    this._productoService.deleteProducto(id).subscribe(data => { // llamamos al método que creamos en el servicio, le pasamos el id y nos suscribimos
+    this.toastr.error('¡Elproducto fue eliminado con éxito!', 'Producto Eliminado...'); // agregamos alerta toastr con msg
+    this.obtenerProductos(); // mandamos a llamar al método para volver a cargar los productos
+  }, error => {
+    console.log(error);
+  })
+  }
 }
