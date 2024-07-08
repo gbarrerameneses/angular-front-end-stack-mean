@@ -23,4 +23,12 @@ export class ProductoService {
   saveProduct(producto: Producto): Observable<any> { // recibe como parámetro un producto de tipo Producto
     return this.http.post(this.url, producto); // pasamos como segundo parámetro el producto
   }
+
+  obtenerProducto(id: string): Observable<any> {
+    return this.http.get(this.url + id); // obtenemos los datos y concatenamos el id
+  }
+
+  editarProducto(id: string, producto: Producto): Observable<any> {
+    return this.http.put(this.url + id, producto); // concatenamos el id y pasamos producto como segundo parámetro
+  }
 }
